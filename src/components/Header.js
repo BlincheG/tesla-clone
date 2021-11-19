@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import MenuIcon from '@mui/icons-material/Menu'
 import CloseIcon from '@mui/icons-material/Close'
@@ -8,7 +8,20 @@ import { useSelector } from 'react-redux'
 export default function Header() {
   const [ burgerStatus, setBurgerStatus ] = useState(false);
   const cars = useSelector(selectCars)
-  
+
+  useEffect(() => {
+    let url = window.location.href.split("/");
+    let target = url[url.length - 1].toLowerCase();
+    let element = document.getElementById(target);
+    element && element.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
+
+  const scrollIntoPage = (e, nameCar) => {
+    let hero = document.getElementById(nameCar);
+    e.preventDefault();
+    hero && hero.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
   return (
     <Container>
       <a>
@@ -17,7 +30,7 @@ export default function Header() {
 
       <Menu>
         {cars && cars.map((car, index) => (
-          <a href={index}>{ car }</a> 
+          <a onClick={(e) => {scrollIntoPage(e, car)}} key={index} href={index}>{ car }</a> 
         ))}
 
       </Menu>
@@ -33,7 +46,7 @@ export default function Header() {
           <CustomClose onClick={() => {setBurgerStatus(false); console.log('123')} } />
         </CloseWrapper>
         {cars && cars.map((car, index) => (
-          <li><a href={index}>{ car }</a></li>
+          <li onClick={(e) => {scrollIntoPage(e, car)}} key={index}><a href={index}>{ car }</a></li>
         ))}
         <li><a href="#">Existing Inventory</a></li>
         <li><a href="#">Used Inventory</a></li>
